@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.kenneth.ctx.news.mapper.LogLoginMapper">
+
+    <sql id="idKey">
+        id
+    </sql>
+
+    <sql id="withoutId">
+        userId,
+        userName,
+        loginTime,
+        loginIP
+    </sql>
+
+    <sql id="tblName">
+        t_log_login
+    </sql>
+
+    <select id="queryAll" resultType="LogLogin">
+        select
+        <include refid="idKey"/>,
+        <include refid="withoutId"/>
+        from
+        <include refid="tblName"/>
+    </select>
+
+    <insert id="insert" parameterType="LogLogin">
+        insert into
+        <include refid="tblName"/>
+        (
+        <include refid="withoutId"/>
+        )
+        values
+        ( #{userId}, #{userName}, #{loginTime}, #{loginIP})
+    </insert>
+
+    <select id="query" resultType="LogLogin">
+        select
+        <include refid="idKey"/>,
+        <include refid="withoutId"/>
+        from
+        <include refid="tblName"/>
+        order by logintime desc
+    </select>
+
+    <select id="queryByPage" resultType="LogLogin">
+        select
+        <include refid="idKey"/>,
+        <include refid="withoutId"/>
+        from
+        <include refid="tblName"/>
+        order by logintime desc
+    </select>
+
+</mapper>

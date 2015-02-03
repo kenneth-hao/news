@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.kenneth.ctx.news.mapper.UserFavoriteMapper">
+    <sql id="idKey">
+        ufid
+    </sql>
+
+    <sql id="withoutId">
+        uid,
+        uname,
+        nid,
+        title,
+        author,
+        listimgpath,
+        linkurl,
+        cdate
+    </sql>
+
+    <sql id="tblName">
+        t_user_favorite
+    </sql>
+
+    <delete id="delete" parameterType="String">
+        delete from
+        <include refid="tblName"/>
+        where
+        <include refid="idKey"/>
+        = #{id}
+    </delete>
+
+    <select id="queryAll" resultType="UserFavorite">
+        select
+        <include refid="idKey"/>,
+        <include refid="withoutId"/>
+        from
+        <include refid="tblName"/>
+    </select>
+
+    <select id="getById" parameterType="String" resultType="UserFavorite">
+        select
+        <include refid="idKey"/>,
+        <include refid="withoutId"/>
+        from
+        <include refid="tblName"/>
+        where
+        <include refid="idKey"/>
+        = #{id}
+    </select>
+
+    <select id="count" resultType="Integer">
+        select count(1)
+        from
+        <include refid="tblName"/>
+    </select>
+
+    <select id="queryByPage" resultType="UserFavorite">
+        select
+        <include refid="idKey"/>,
+        <include refid="withoutId"/>
+        from
+        <include refid="tblName"/>
+        order by cdate desc
+    </select>
+
+    <insert id="insert" keyProperty="ufid" useGeneratedKeys="true"
+            flushCache="true" timeout="20">
+        insert into
+        <include refid="tblName"/>
+        (
+        <include refid="withoutId"/>
+        )
+        values
+        ( #{uid}, #{uname}, #{nid}, #{title}, #{author}, #{listImgPath}, #{linkUrl}, #{cdate})
+    </insert>
+
+    <delete id="deleteByVo">
+        delete from
+        <include refid="tblName"/>
+        <where>
+            <if test="vo.uid != null">
+                and uid = #{vo.uid}
+            </if>
+            <if test="vo.nid != null">
+                and nid = #{vo.nid}
+            </if>
+        </where>
+    </delete>
+
+    <select id="queryOne" resultType="UserFavorite">
+        select
+        <include refid="idKey"/>,
+        <include refid="withoutId"/>
+        from
+        <include refid="tblName"/>
+        <where>
+            <if test="vo.uid != null">
+                and uid = #{vo.uid}
+            </if>
+            <if test="vo.nid != null">
+                and nid = #{vo.nid}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryFavoritedNids" resultType="Integer">
+        select
+        nid
+        from <include refid="tblName"/>
+        WHERE
+        uid=#{userId}
+    </select>
+</mapper>

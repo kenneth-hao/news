@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.kenneth.ctx.news.mapper.RoleMapper">
+
+    <sql id="idKey">
+        id
+    </sql>
+
+    <sql id="withoutId">
+        name,
+        alias,
+        status,
+        cdate,
+        udate
+    </sql>
+
+    <sql id="tblName">
+        t_role
+    </sql>
+
+    <delete id="delete" parameterType="String">
+        delete from
+        <include refid="tblName"/>
+        where
+        <include refid="idKey"/>
+        = #{id}
+    </delete>
+
+    <select id="queryAll" resultType="Role">
+        select
+        <include refid="idKey"/>,
+        <include refid="withoutId"/>
+        from
+        <include refid="tblName"/>
+    </select>
+
+    <select id="getById" parameterType="String" resultType="Role">
+        select
+        <include refid="idKey"/>,
+        <include refid="withoutId"/>
+        from
+        <include refid="tblName"/>
+        where
+        <include refid="idKey"/>
+        = #{id}
+    </select>
+
+    <select id="count" resultType="Integer">
+        select count(1)
+        from
+        <include refid="tblName"/>
+    </select>
+
+    <select id="queryOne" resultType="Role">
+        select
+        <include refid="idKey"/>,
+        <include refid="withoutId"/>
+        from
+        <include refid="tblName"/>
+        <where>
+            <if test="vo.alias != null and vo.alias != ''">
+                alias = #{vo.alias}
+            </if>
+        </where>
+    </select>
+
+    <select id="query" resultType="Role">
+        select
+        <include refid="idKey"/>,
+        <include refid="withoutId"/>
+        from
+        <include refid="tblName"/>
+        <where>
+            <if test="vo.alias != null and vo.alias != ''">
+                alias = #{vo.alias}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryByPage" resultType="Role">
+        select
+        <include refid="idKey"/>,
+        <include refid="withoutId"/>
+        from
+        <include refid="tblName"/>
+        <where>
+            <if test="vo.alias != null and vo.alias != ''">
+                alias = #{vo.alias}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insert" keyProperty="nid" useGeneratedKeys="true"
+            flushCache="true" timeout="20">
+        insert into
+        <include refid="tblName"/>
+        (
+        <include refid="withoutId"/>
+        )
+        values
+        ( #{name}, #{alias}, #{status}, #{cdate}, #{udate})
+    </insert>
+
+    <update id="update">
+        update
+        <include refid="tblName"/>
+        <set>
+            <if test="name != null and name != ''">
+                name=#{name},
+            </if>
+            <if test="alias != null and alias != ''">
+                alias=#{alias},
+            </if>
+            <if test="status != null and status != ''">
+                status=#{status},
+            </if>
+            <if test="cdate != null and cdate != ''">
+                cdate=#{cdate},
+            </if>
+            <if test="udate != null and udate != ''">
+                udate=#{udate}
+            </if>
+        </set>
+        where
+        <include refid="idKey"/>
+        = #{id}
+    </update>
+
+</mapper>

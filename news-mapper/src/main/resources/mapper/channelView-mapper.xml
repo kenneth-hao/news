@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.kenneth.ctx.news.mapper.ChannelViewMapper">
+
+    <sql id="withoutId">
+        channelid,
+        channeltype,
+        channelalias,
+        channelname,
+        isfixed,
+        seqno
+    </sql>
+
+    <sql id="tblName">
+        v_channel
+    </sql>
+
+    <select id="queryOne" resultType="ChannelView">
+        select
+        <include refid="withoutId"/>
+        from
+        <include refid="tblName"/>
+        <where>
+            <if test="vo.channelId != null">
+                and channelId = #{vo.channelId }
+            </if>
+            <if test="vo.channelType != null">
+                and channelType = #{vo.channelType }
+            </if>
+            <if test="vo.isfixed != null">
+                and isfixed = #{vo.isfixed }
+            </if>
+            <if test="vo.isDefault != null">
+                and isDefault = #{vo.isDefault }
+            </if>
+        </where>
+    </select>
+
+    <select id="query" resultType="ChannelView">
+        select
+        <include refid="withoutId"/>
+        from
+        <include refid="tblName"/>
+        <where>
+            <if test="vo.channelId != null">
+                and channelId = #{vo.channelId }
+            </if>
+            <if test="vo.channelType != null">
+                and channelType = #{vo.channelType }
+            </if>
+            <if test="vo.isfixed != null">
+                and isfixed = #{vo.isfixed }
+            </if>
+            <if test="vo.isDefault != null">
+                and isDefault = #{vo.isDefault }
+            </if>
+            <if test="vo.channelIdList != null and vo.channelIdList.size != 0">
+                and channelid not in
+                <foreach item="item" index="index" collection="vo.channelIdList" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        order by seqno
+    </select>
+
+</mapper>

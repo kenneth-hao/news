@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.kenneth.ctx.news.mapper.LogOperationMapper">
+
+    <sql id="idKey">
+        id
+    </sql>
+
+    <sql id="withoutId">
+        username,
+        module,
+        action,
+        actionTime,
+        userIP,
+        elapseTime
+    </sql>
+
+    <sql id="tblName">
+        t_log_operation
+    </sql>
+
+    <delete id="delete" parameterType="String">
+        delete from
+        <include refid="tblName"/>
+        where
+        <include refid="idKey"/>
+        = #{id}
+    </delete>
+
+    <select id="queryAll" resultType="Role">
+        select
+        <include refid="idKey"/>,
+        <include refid="withoutId"/>
+        from
+        <include refid="tblName"/>
+    </select>
+
+    <select id="getById" parameterType="String" resultType="Role">
+        select
+        <include refid="idKey"/>,
+        <include refid="withoutId"/>
+        from
+        <include refid="tblName"/>
+        where
+        <include refid="idKey"/>
+        = #{id}
+    </select>
+
+    <select id="count" resultType="Integer">
+        select count(1)
+        from
+        <include refid="tblName"/>
+    </select>
+
+    <insert id="insert">
+        insert into
+        <include refid="tblName"/>
+        (
+        <include refid="withoutId"/>
+        )
+        values
+        ( #{username}, #{module}, #{action}, #{actionTime}, #{userIP}, #{elapseTime} )
+    </insert>
+
+    <select id="query" resultType="LogOperation">
+        select
+        <include refid="idKey"/>,
+        <include refid="withoutId"/>
+        from
+        <include refid="tblName"/>
+        order by actiontime desc
+    </select>
+
+    <select id="queryByPage" resultType="LogOperation">
+        select
+        <include refid="idKey"/>,
+        <include refid="withoutId"/>
+        from
+        <include refid="tblName"/>
+        order by actiontime desc
+    </select>
+</mapper>

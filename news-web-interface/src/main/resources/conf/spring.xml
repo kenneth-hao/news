@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-3.1.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop-3.1.xsd">
+
+    <!-- 引入jdbc配置文件 -->
+    <context:property-placeholder location="classpath:conf/jdbc.properties"/>
+
+    <bean id="propertyConfigurer" class="org.kenneth.ctx.news.utils.spring.CustomPropertyConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:conf/config.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <!-- 扫描文件（自动注入） -->
+    <context:component-scan base-package="org.kenneth.ctx.news.biz"/>
+
+    <import resource="spring-mybatis.xml"/>
+
+    <bean id="log4jHandlerAOP" class="org.kenneth.ctx.news.aop.LogOperationAop"></bean>
+
+    <aop:config proxy-target-class="true">
+        <aop:aspect id="logAspect" ref="log4jHandlerAOP">
+            <aop:pointcut id="logPointCut" expression="execution(* org.kenneth.ctx.news.biz..*.*(..))"/>
+            <aop:around method="logOperation" pointcut-ref="logPointCut"/>
+        </aop:aspect>
+    </aop:config>
+
+</beans>

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.kenneth.ctx.news.mapper.UserMapper">
+
+    <sql id="columnPk">
+        uid
+    </sql>
+
+    <sql id="columnsExcludePk">
+        name,
+        mobile,
+        email,
+        pwd,
+        nickname,
+        realname,
+        gender,
+        portraitImgPath,
+        usertype,
+        cdate,
+        udate,
+        valid
+    </sql>
+
+    <sql id="tableName">
+        t_user
+    </sql>
+
+    <resultMap id="userResultMap" type="User">
+        <id property="uid" column="uid" javaType="Integer"/>
+        <result property="name" column="name" javaType="String"/>
+        <result property="mobile" column="mobile" javaType="String"/>
+        <result property="email" column="email" javaType="String"/>
+        <result property="pwd" column="pwd" javaType="String"/>
+        <result property="nickname" column="nickname" javaType="String"/>
+        <result property="realname" column="realname" javaType="String"/>
+        <result property="gender" column="gender" javaType="Integer"/>
+        <result property="portraitImgPath" column="portraitImgPath" javaType="String"/>
+        <result property="usertype" column="usertype" javaType="Integer"/>
+        <result property="cdate" column="cdate" javaType="Date"/>
+        <result property="udate" column="udate" javaType="Date"/>
+        <result property="valid" column="valid" javaType="Integer"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="User" keyProperty="uid" useGeneratedKeys="true"
+            flushCache="true" timeout="20">
+        insert into
+        <include refid="tableName"/>
+        (
+        <include refid="columnsExcludePk"/>
+        )
+        values
+        (
+        #{name},
+        #{mobile},
+        #{email},
+        #{md5Pwd},
+        #{nickname},
+        #{realname},
+        #{gender},
+        #{portraitImgPath},
+        #{usertype},
+        #{cdate},
+        #{udate},
+        #{valid}
+        )
+    </insert>
+
+    <update id="update" parameterType="User" flushCache="true" timeout="20">
+        update
+        <include refid="tableName"/>
+        <set>
+            <if test="userName != null">user_name=#{userName},</if>
+            <if test="password != null">password=#{password},</if>
+            <if test="userType != null">user_type=#{userType},</if>
+            <if test="locked != null">locked=#{locked},</if>
+            <if test="credit != null">credit=#{credit}</if>
+        </set>
+        where
+        <include refid="columnPk"/>=#{userId}
+    </update>
+
+    <delete id="delete" parameterType="Integer" flushCache="true" timeout="20">
+        delete from
+        <include refid="tableName"/>
+        where
+        <include refid="columnPk"/>=#{id}
+    </delete>
+
+    <select id="getById" resultMap="userResultMap">
+        select
+        <include refid="columnPk"/>,
+        <include refid="columnsExcludePk"/>
+        from
+        <include refid="tableName"/>
+        where
+        <include refid="columnPk"/>=#{id}
+    </select>
+
+    <select id="query" resultMap="userResultMap">
+        select
+        <include refid="columnPk"/>,
+        <include refid="columnsExcludePk"/>
+        from
+        <include refid="tableName"/>
+        where
+        valid=1
+        <if test="vo.loginId != null and vo.loginId != ''">
+            and name = #{vo.loginId}
+        </if>
+        <if test="vo.md5Pwd != null and vo.md5Pwd != ''">
+            and pwd = #{vo.md5Pwd}
+        </if>
+        <if test="vo.email != null and vo.email != ''">
+            and email = #{vo.email}
+        </if>
+        <if test="vo.mobile != null and vo.mobile != ''">
+            and mobile = #{vo.mobile }
+        </if>
+    </select>
+
+    <select id="queryByPage" resultMap="userResultMap">
+        select
+        <include refid="columnPk"/>,
+        <include refid="columnsExcludePk"/>
+        from
+        <include refid="tableName"/>
+        where
+        valid=1
+        <if test="vo.loginId != null and vo.loginId != ''">
+            and name = #{vo.loginId}
+        </if>
+        <if test="vo.md5Pwd != null and vo.md5Pwd != ''">
+            and pwd = #{vo.md5Pwd}
+        </if>
+        <if test="vo.email != null and vo.email != ''">
+            and email = #{vo.email}
+        </if>
+        <if test="vo.mobile != null and vo.mobile != ''">
+            and mobile = #{vo.mobile }
+        </if>
+    </select>
+</mapper>

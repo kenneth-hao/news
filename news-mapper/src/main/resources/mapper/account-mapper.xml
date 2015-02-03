@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.kenneth.ctx.news.mapper.AccountMapper">
+
+    <sql id="idKey">
+        id
+    </sql>
+
+    <sql id="withoutId">
+        userName,
+        realname,
+        password,
+        status,
+        cdate,
+        udate
+    </sql>
+
+    <sql id="tblName">
+        t_account
+    </sql>
+
+    <delete id="delete" parameterType="String">
+        delete from
+        <include refid="tblName"/>
+        where
+        <include refid="idKey"/>
+        = #{id}
+    </delete>
+
+    <select id="queryAll" resultType="Account">
+        select
+        <include refid="idKey"/>,
+        <include refid="withoutId"/>
+        from
+        <include refid="tblName"/>
+    </select>
+
+    <select id="getById" parameterType="String" resultType="Account">
+        select
+        <include refid="idKey"/>,
+        <include refid="withoutId"/>
+        from
+        <include refid="tblName"/>
+        where
+        <include refid="idKey"/>
+        = #{id}
+    </select>
+
+    <select id="count" resultType="Integer">
+        select count(1)
+        from
+        <include refid="tblName"/>
+    </select>
+
+    <select id="queryOne" resultType="Account">
+        select
+        <include refid="idKey"/>,
+        <include refid="withoutId"/>
+        from
+        <include refid="tblName"/>
+        <where>
+            <if test="vo.userName != null and vo.userName != ''">
+                userName = #{vo.userName }
+            </if>
+            <if test="vo.password != null and vo.password != ''">
+                password = #{vo.password }
+            </if>
+        </where>
+    </select>
+
+    <select id="query" resultType="Account">
+        select
+        <include refid="idKey"/>,
+        <include refid="withoutId"/>
+        from
+        <include refid="tblName"/>
+        <where>
+            <if test="vo.userName != null and vo.userName != ''">
+                userName = #{vo.userName }
+            </if>
+            <if test="vo.password != null and vo.password != ''">
+                password = #{vo.password }
+            </if>
+        </where>
+    </select>
+
+    <select id="queryByPage" resultType="Account" parameterType="java.util.Map">
+        select
+        <include refid="idKey"/>,
+        <include refid="withoutId"/>
+        from
+        <include refid="tblName"/>
+        <where>
+            <if test="vo.userName != null and vo.userName != ''">
+                userName = #{vo.userName }
+            </if>
+            <if test="vo.password != null and vo.password != ''">
+                password = #{vo.password }
+            </if>
+        </where>
+    </select>
+
+    <insert id="insert" parameterType="Account" keyProperty="id" useGeneratedKeys="true"
+            flushCache="true" timeout="20">
+        insert into
+        <include refid="tblName"/>
+        (
+        <include refid="withoutId"/>
+        )
+        values
+        ( #{userName}, #{realName}, #{md5Pwd }, #{status}, #{cdate}, #{udate})
+    </insert>
+
+    <update id="update">
+        update
+        <include refid="tblName"/>
+        <set>
+            <if test="userName != null and userName != ''">
+                userName=#{userName},
+            </if>
+            <if test="realName != null and realName != ''">
+                realName=#{realName},
+            </if>
+            <if test="password != null and password != ''">
+                password=#{md5Pwd },
+            </if>
+            <if test="description != null and description != ''">
+                description=#{description},
+            </if>
+            <if test="status != null and status != ''">
+                status=#{status},
+            </if>
+            <if test="cdate != null and cdate != ''">
+                cdate=#{cdate},
+            </if>
+            <if test="udate != null and udate != ''">
+                udate=#{udate}
+            </if>
+        </set>
+        where
+        <include refid="idKey"/>
+        = #{id}
+    </update>
+
+</mapper>

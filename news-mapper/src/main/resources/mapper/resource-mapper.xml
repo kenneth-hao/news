@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.kenneth.ctx.news.mapper.ResourceMapper">
+
+    <sql id="idKey">
+        id
+    </sql>
+
+    <sql id="withoutId">
+        name,
+        parentId,
+        parentName,
+        alias,
+        url,
+        level,
+        type,
+        seqno,
+        cdate
+    </sql>
+
+    <sql id="tblName">
+        t_resource
+    </sql>
+
+    <delete id="delete" parameterType="String">
+        delete from
+        <include refid="tblName"/>
+        where
+        <include refid="idKey"/>
+        = #{id}
+    </delete>
+
+    <select id="queryAll" resultType="Resource">
+        select
+        <include refid="idKey"/>,
+        <include refid="withoutId"/>
+        from
+        <include refid="tblName"/>
+    </select>
+
+    <select id="getById" parameterType="String" resultType="Resource">
+        select
+        <include refid="idKey"/>,
+        <include refid="withoutId"/>
+        from
+        <include refid="tblName"/>
+        where
+        <include refid="idKey"/>
+        = #{id}
+    </select>
+
+    <select id="count" resultType="Integer">
+        select count(1)
+        from
+        <include refid="tblName"/>
+    </select>
+
+    <select id="queryOne" resultType="Resource">
+        select
+        <include refid="idKey"/>,
+        <include refid="withoutId"/>
+        from
+        <include refid="tblName"/>
+        <where>
+            <if test="vo.alias != null and vo.alias != ''">
+                alias = #{vo.alias}
+            </if>
+        </where>
+    </select>
+
+    <select id="query" resultType="Resource">
+        select
+        <include refid="idKey"/>,
+        <include refid="withoutId"/>
+        from
+        <include refid="tblName"/>
+        <where>
+            <if test="vo.alias != null and vo.alias != ''">
+                alias = #{vo.alias}
+            </if>
+            <if test="vo.name != null and vo.name != ''">
+                name like '%${vo.name}%'
+            </if>
+        </where>
+    </select>
+
+    <select id="queryByPage" resultType="Resource">
+        select
+        <include refid="idKey"/>,
+        <include refid="withoutId"/>
+        from
+        <include refid="tblName"/>
+        <where>
+            <if test="vo.alias != null and vo.alias != ''">
+                alias = #{vo.alias}
+            </if>
+            <if test="vo.name != null and vo.name != ''">
+                name like '%${vo.name}%'
+            </if>
+        </where>
+    </select>
+
+    <insert id="insert" parameterType="Resource">
+        insert into
+        <include refid="tblName"/>
+        (
+        <include refid="withoutId"/>
+        )
+        values
+        ( #{name}, #{parentId}, #{parentName}, #{alias}, #{url}, #{level}, #{type},#{seqno}, #{cdate})
+    </insert>
+
+    <!-- 更新 -->
+    <update id="update" parameterType="Resource">
+        update
+        <include refid="tblName"/>
+        <set>
+            <if test="name != null and name != ''">
+                name=#{name},
+            </if>
+            <if test="parentId != null and parentId != ''">
+                parentId=#{parentId},
+            </if>
+            <if test="alias != null and alias != ''">
+                alias=#{alias},
+            </if>
+            <if test="url != null and url != ''">
+                url=#{url},
+            </if>
+            <if test="level != null and level != ''">
+                level=#{level},
+            </if>
+            <if test="level != null and level != ''">
+                type=#{type},
+            </if>
+            <if test="cdate != null and cdate != ''">
+                cdate=#{cdate}
+            </if>
+        </set>
+        where
+        <include refid="idKey"/>
+        = #{id}
+    </update>
+
+
+    <!-- Not Common -->
+
+    <select id="queryAccountResources" resultType="Resource">
+        select
+        <include refid="idKey"/>,
+        <include refid="withoutId"/>
+        from
+        <include refid="tblName"/>
+        where
+        <include refid="idKey"/>
+        in (
+        select resourceid
+        from t_role_resource
+        where roleid in (
+        select roleid FROM t_role_account where accountid=#{accountId}
+        )
+        group by resourceid
+        )
+    </select>
+
+</mapper>

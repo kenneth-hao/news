@@ -1,0 +1,556 @@
+POST 请求方式:
+-- EXAMPLE: 
+Map<String, String> params = new HashMap<String, String>();
+params.put("key1", "value1");
+params.put("key2", "value2");
+HTTPClent.post("/rest/rights/commit.rest", params);
+
+
+-- 通用请求数据: 
+{
+	"JSESSIONID": "XDA2S23231231SDASD"
+}
+
+
+-- 请求出现错误
+-- 返回结果:
+{
+	"msg": "错误消息",
+	"code": "返回结果状态码: 200, 正常; 500, 服务器错误"
+}
+
+
+
+
+-- 意见反馈
+/rest/feedback/propose.rest
+-- 请求方式: POST
+
+-- 参数结构
+KEY: content 	VALUE: '反馈内容'
+
+-- 返回结果
+{
+	"code": "返回结果状态码: 200, 正常; 500, 服务器错误"
+}
+
+
+
+-- 根据给定条件查询新闻列表
+/rest/news/queryByQc.rest
+-- 请求方式: POST
+
+-- 参数
+KEY: strNewsIds    VALUE: "指定查询的新闻集合, 用 ',' 分割"
+
+-- 返回结果
+{
+	more: "false / true  是否存在更多新闻",
+	data: {
+		"newsList": [
+			{
+				author: "作者",
+				carouselImgPath: "轮播图路径",
+				channelId: "所属频道ID",
+				channelType: "所属频道类型: 1, 新闻栏目; 2. 车企频道",
+				channelName: "所属频道名称",
+				commentCount: "评论数", 
+				content: "新闻内容",
+				linkUrl: "新闻页对应的URL",
+				listImgPath: "列表图路径",
+				nid: "新闻ID",
+				publishTime: "发布时间",
+				title: "新闻标题",
+				isfavorate: "是否已收藏: 1, 已收藏; 2, 未收藏"
+			}
+		]
+	},
+	code: "返回结果状态码: 200, 正常; 500, 服务器错误",
+	pageSize: "每页显示个数",
+	currentPage: "当前页码"
+}
+
+
+
+
+-- 同步本地已收藏的新闻
+/rest/user_favorite/sync.rest
+-- 请求方式: POST
+
+-- 参数结构
+KEY: localFavoriteNidsStr 	VALUE: "已收藏新闻的ID标识, 以 ',' 号分隔"
+
+-- 返回结果
+{
+	"code": "返回结果状态码: 200, 正常; 500, 服务器错误"
+}
+
+
+
+
+-- 收藏新闻
+/rest/user_favorite/collect.rest
+-- 请求方式: POST
+
+-- 参数结构
+KEY: nid 	VALUE: '当前新闻的ID标识'
+
+-- 返回结果
+{
+	"code": "返回结果状态码: 200, 正常; 500, 服务器错误"
+}
+
+
+
+
+-- 取消收藏
+/rest/user_favorite/cancel_collect.rest
+-- 请求方式: POST
+
+-- 参数结构
+KEY: nid 	VALUE: '当前新闻的ID标识'
+
+-- 返回结果
+{
+	"code": "返回结果状态码: 200, 正常; 500, 服务器错误"
+}
+
+
+
+
+-- 当前登录用户的收藏新闻
+/rest/news/queryUserFavorite.rest
+-- 请求方式: GET
+
+-- 参数结构
+无
+
+-- 返回结果
+{
+	more: "false / true  是否存在更多新闻",
+	data: {
+		"favoriteNews": [
+			{
+				author: "作者",
+				carouselImgPath: "轮播图路径",
+				channelId: "所属频道ID",
+				channelType: "所属频道类型: 1, 新闻栏目; 2. 车企频道",
+				channelName: "所属频道名称",
+				commentCount: "评论数",
+				content: "新闻内容",
+				linkUrl: "新闻页对应的URL",
+				listImgPath: "列表图路径",
+				nid: "新闻ID",
+				publishTime: "发布时间",
+				title: "新闻标题",
+				isfavorate: "是否已收藏: 1, 已收藏; 2, 未收藏"
+			}
+		]
+	},
+	code: "返回结果状态码: 200, 正常; 500, 服务器错误",
+	pageSize: "每页显示个数",
+	currentPage: "当前页码"
+}
+
+
+
+-- 判断当前用户是否已登录
+/rest/login/islogon.rest
+
+-- 返回结果:
+{
+	"code": "返回结果状态码: 200",
+	"islogon": "true: 已登录; false: 未登录或 Session 已失效",
+	"user": "如果用户已登录, 返回用户信息"
+}
+
+
+-- 注册
+/rest/login/register.rest
+-- 请求方式: POST
+
+-- 参数结构
+KEY: mobile 	VALUE: '手机号'
+KEY: email 		VALUE: '电子邮箱'
+KEY: pwd		VALUE: '用户密码'
+
+-- 返回结果:
+{
+	"code": "返回结果状态码: 200, 正常; 500, 服务器错误; 1001, 操作失败",
+	"data": {
+		"newUser": {
+			"cdate": "注册时间",
+			"email": "电子邮箱",
+			"mobile": "手机号",
+			"name": "登录ID",
+			"nickname": "用户昵称/别名",
+			"uid": "用户唯一ID",
+			"usertype": "用户类型: 1, 游客; 2, 用户"
+		}
+	}
+	"msg": "错误提示"
+}
+
+
+
+
+-- 登录
+/rest/login/login.rest
+-- 请求方式: POST
+
+-- 参数结构
+KEY: loginId 	VALUE: '登录ID'
+KEY: password		VALUE: '用户密码'
+
+-- 返回结果:
+{
+	"code": "返回结果状态码: 200, 正常; 500, 服务器错误; 1001, 操作失败",
+	"data": {
+		"loginToken" : "用户登录后, 在服务器缓存的登录令牌, 30分钟后过期",
+		"JSESSIONID" : "当前会话标识ID"
+	},
+	"msg": "消息提示"
+}
+
+
+
+
+-- 提交维权
+/rest/rights/commit.rest
+-- 请求方式: POST
+
+-- 参数结构
+KEY: title   VALUE: '标题'
+KEY: author VALUE: "发布人"
+KEY: mobile VALUE: "发布人联系方式"
+KEY: content VALUE: "内容"
+KEY: carinfo VALUE: "车辆信息"
+KEY: carno VALUE: "车牌号"
+KEY: detailMultiImg VALUE: "暂时不传递"
+
+-- 返回结果:
+{
+	"code": "返回结果状态码: 200, 正常; 500, 服务器错误"
+}
+
+
+
+
+-- 提交评论
+/rest/comment/commit.rest
+-- 请求方式: POST
+
+-- 参数结构
+KEY: nid   VALUE: 1
+KEY: content VALUE: "新闻内容"
+
+-- EXAMPLE: 
+Map<String, String> params = new HashMap<String, String>();
+params.put("nid", "1");
+params.put("content", "新闻内容");
+HTTPClent.post("/rest/comment/commit.rest", params);
+
+-- 返回结果:
+{
+	"code": "返回结果状态码: 200, 正常; 500, 服务器错误",
+	"data": {
+		"newComment": {
+			cmid: "评论ID",
+			content": "评论内容",
+			nid: "评论的新闻ID",
+			uid: "评论者ID",
+			uname: "评论者名称",
+			cdate: "评论时间, 格式: 2012-12-26 00:00:00"
+			},
+		"commentCount": "最新的评论总数"
+	}
+}
+
+
+
+
+
+-- 查询评论信息
+/rest/comment/query.rest
+
+-- 参数
+newsId 新闻ID
+page.currentPage 页码, 默认 1
+page.pageSize 每次请求的个数, 默认 10
+
+-- 返回结果
+{
+	more: "false / true  是否存在更多评论",
+	data: [
+		{
+			cmid: "评论ID",
+			content": "评论内容",
+			nid: "评论的新闻ID",
+			uid: "评论者ID",
+			uname: "评论者名称",
+			cdate: "评论时间, 格式: 2012-12-26 00:00:00"
+		}
+	],
+	code: "返回结果状态码: 200, 正常; 500, 服务器错误",
+	pageSize: "每页显示个数",
+	currentPage: "当前页码"
+
+}
+
+
+
+
+-- 查询车企信息
+/rest/carenterprise/query.rest
+
+-- 返回结果:
+{
+	data: [
+		{
+			ceid: '车企ID',
+			name: '车企名称',
+			brandImgPath: '车企品牌图片路径, 注意: 使用时需要拼接静态资源服务器地址',
+			appurl: '车企 APP 下载地址',
+			seqno: '排序标志位'
+		}
+	],
+	code: "返回结果状态码: 200, 正常; 500, 服务器错误"
+}
+
+
+
+
+-- 频道定制
+/rest/channel/custom.rest
+-- 请求方式: POST
+
+-- 参数结构
+customChannel=[
+	{
+		channelType:'频道类型: 1, 新闻栏目; 2. 车企频道', 
+		channelId: '栏目/车企ID', 
+		seqno:'排序标识位, 如果前面固定的栏目为三个, 则从 4 开始计算'
+	}
+]
+
+-- EXAMPLE:
+Map<String, String> params = new HashMap<String, String>();
+params.put("customChannel", "[{channelType:1, channelId:4, seqno:4},{channelType:2, channelId:1, seqno:5}]");
+HTTPClent.post("/rest/channel/custom.rest", params);
+
+-- 返回结果:
+{
+	"code": "返回结果状态码: 200, 正常; 500, 服务器错误"
+}
+
+
+
+
+
+
+-- 查询用户频道信息
+/rest/channel/query.rest
+
+-- 返回结果:
+{
+    "data": {
+        "customed": [
+            {
+                ucid:'用户已订制频道的唯一标识, 值为 -1, 不可用', 
+				channelType:'频道类型: 1, 新闻栏目; 2. 车企频道', 
+				channelId: '栏目/车企ID', 
+				channelName: '栏目/车企名称', 
+				isfixed: '1: 固定频道, 0: 可调整', 
+				seqno:'排序标识位'
+            }
+        ],
+        "uncustomCarEnterprise": [
+        ],
+        "uncustomChannelCarEnterprise":[
+        ]
+    },
+    "code": "返回结果状态码: 200, 正常; 500, 服务器错误"
+}
+
+
+
+
+
+-- 查询用户已定制的频道
+/rest/channel/queryCustom.rest
+
+-- 返回结果
+{
+    "data": [
+        {
+            ucid:'用户已订制频道的唯一标识, 值为 -1, 不可用', 
+			channelType:'频道类型: 1, 新闻栏目; 2. 车企频道', 
+			channelId: '栏目/车企ID', 
+			channelName: '栏目/车企名称', 
+			isfixed: '1: 固定频道, 0: 可调整', 
+			seqno:'排序标识位'
+        }
+    ],
+    "code": "返回结果状态码: 200, 正常; 500, 服务器错误"
+}
+
+
+
+
+
+
+-- 查询用户未定制的栏目频道
+/rest/channel/queryUncustomCategory.rest
+
+-- 返回结果
+{
+    "data": [
+        {
+            ucid:'用户已订制频道的唯一标识, 值为 -1, 不可用', 
+			channelType:'频道类型: 1, 新闻栏目; 2. 车企频道', 
+			channelId: '栏目/车企ID', 
+			channelName: '栏目/车企名称', 
+			isfixed: '1: 固定频道, 0: 可调整', 
+			seqno:'排序标识位'
+        }
+    ],
+    "code": "返回结果状态码: 200, 正常; 500, 服务器错误"
+}
+
+
+
+
+
+
+-- 查询用户未定制的车企频道
+/rest/channel/queryUncustomCarEnterprise.rest
+
+-- 返回结果
+{
+    "data": [
+        {
+            ucid:'用户已订制频道的唯一标识, 值为 -1, 不可用', 
+			channelType:'频道类型: 1, 新闻栏目; 2. 车企频道', 
+			channelId: '栏目/车企ID', 
+			channelName: '栏目/车企名称', 
+			isfixed: '1: 固定频道, 0: 可调整', 
+			seqno:'排序标识位'
+        }
+    ],
+    "code": "返回结果状态码: 200, 正常; 500, 服务器错误"
+}
+
+
+
+
+
+
+-- 查询新闻
+/rest/news/query.rest
+
+-- 参数
+channelId 频道ID    
+channelType 频道类型: 1, 新闻栏目; 2. 车企频道
+page.currentPage 列表新闻的页码, 默认 1
+page.pageSize 列表新闻每次请求的新闻个数, 默认 10
+carouselSize 轮播图新闻的个数, 默认 4
+isRecommand 是否为推荐新闻: 1, 是; 0, 否
+
+-- 返回结果
+{
+	more: "false / true  是否存在更多新闻",
+	data: {
+		// 列表图新闻
+		"listNews": [
+			{
+				author: "作者",
+				carouselImgPath: "轮播图路径",
+				channelId: "所属频道ID",
+				channelType: "所属频道类型: 1, 新闻栏目; 2. 车企频道",
+				channelName: "所属频道名称",
+				commentCount: "评论数",
+				content: "新闻内容",
+				linkUrl: "新闻页对应的URL",
+				listImgPath: "列表图路径",
+				nid: "新闻ID",
+				publishTime: "发布时间",
+				title: "新闻标题",
+				isfavorate: "是否已收藏: 1, 已收藏; 2, 未收藏"
+			}
+		],
+		// 轮播图新闻
+		"carouselNews": [
+		]
+	},
+	code: "返回结果状态码: 200, 正常; 500, 服务器错误",
+	pageSize: "每页显示个数",
+	currentPage: "当前页码"
+}
+
+
+
+
+-- 查询轮播图新闻
+/rest/news/queryCarousel.rest
+
+-- 参数
+channelId 频道ID    
+channelType 频道类型: 1, 新闻栏目; 2. 车企频道
+carouselSize 轮播图新闻的个数, 默认 4
+isRecommand 是否为推荐新闻: 1, 是; 0, 否;
+
+-- 返回结果
+{
+	data: [
+		{
+			author: "作者",
+			carouselImgPath: "轮播图路径",
+			channelId: "所属频道ID",
+			channelType: "所属频道类型: 1, 新闻栏目; 2. 车企频道",
+			channelName: "所属频道名称",
+			commentCount: "评论数",
+			content: "新闻内容",
+			linkUrl: "新闻页对应的URL",
+			nid: "新闻ID",
+			publishTime: "发布时间",
+			title: "新闻标题"
+		}
+	],
+	code: "返回结果状态码: 200, 正常; 500, 服务器错误"
+}
+
+
+
+
+
+-- 查询列表新闻
+/rest/news/queryList.rest
+
+-- 参数
+channelId 频道ID    
+channelType 频道类型: 1, 新闻栏目; 2. 车企频道
+page.currentPage 列表新闻的页码, 默认 1
+page.pageSize 列表新闻每次请求的新闻个数, 默认 10
+isRecommand 是否为推荐新闻: 1, 是; 0, 否
+
+-- 返回结果
+{
+	data: [
+		{
+			author: "作者",
+			listImgPath: "列表图路径",
+			channelId: "所属频道ID",
+			channelType: "所属频道类型: 1, 新闻栏目; 2. 车企频道",
+			channelName: "所属频道名称",
+			commentCount: "评论数",
+			content: "新闻内容",
+			linkUrl: "新闻页对应的URL",
+			nid: "新闻ID",
+			publishTime: "发布时间",
+			title: "新闻标题"
+		}
+	],
+	code: "返回结果状态码: 200, 正常; 500, 服务器错误",
+	pageSize: "每页显示个数",
+	currentPage: "当前页码"
+}

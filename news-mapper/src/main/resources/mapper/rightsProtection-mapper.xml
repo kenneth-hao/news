@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.kenneth.ctx.news.mapper.RightsProtectionMapper">
+
+    <sql id="columnPk">
+        rpid
+    </sql>
+
+    <sql id="columnsExcludePk">
+        nid, title, author, mobile, carinfo, carno, content, listImgPath, detailMultiImgPath, status, cdate, udate,
+        valid
+    </sql>
+
+    <sql id="tableName">
+        t_rights_protection
+    </sql>
+
+    <resultMap id="rightsProtectionResultMap" type="RightsProtection">
+        <id property="rpid" column="rpid" javaType="Integer"/>
+        <result property="nid" column="nid" javaType="Integer"/>
+        <result property="title" column="title" javaType="String"/>
+        <result property="author" column="author" javaType="String"/>
+        <result property="mobile" column="mobile" javaType="String"/>
+        <result property="carinfo" column="carinfo" javaType="String"/>
+        <result property="carno" column="carno" javaType="String"/>
+        <result property="content" column="content" javaType="String"/>
+        <result property="listImgPath" column="listImgPath" javaType="String"/>
+        <result property="detailMultiImgPath" column="detailMultiImgPath" javaType="String"/>
+        <result property="status" column="status" javaType="Integer"/>
+        <result property="cdate" column="cdate" javaType="Date"/>
+        <result property="udate" column="udate" javaType="Date"/>
+        <result property="valid" column="valid" javaType="Integer"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="RightsProtection" keyProperty="rpid" useGeneratedKeys="true"
+            flushCache="true" timeout="20">
+        insert into
+        <include refid="tableName"/>
+        (
+        <include refid="columnsExcludePk"/>
+        )
+        values
+        (
+        #{nid}, #{title}, #{author}, #{mobile}, #{carinfo}, #{carno}, #{content}, #{listImgPath}, #{detailMultiImgPath},
+        #{status}, #{cdate}, #{udate}, #{valid}
+        )
+    </insert>
+
+    <delete id="delete" parameterType="Integer" flushCache="true" timeout="20">
+        delete from
+        <include refid="tableName"/>
+        where
+        <include refid="columnPk"/>=#{id}
+    </delete>
+
+    <select id="findById" parameterType="Integer" resultMap="rightsProtectionResultMap">
+        select
+        <include refid="columnPk"/>,
+        <include refid="columnsExcludePk"/>
+        from
+        <include refid="tableName"/>
+        where
+        <include refid="columnPk"/>=#{id}
+    </select>
+
+    <select id="query" resultMap="rightsProtectionResultMap">
+        select
+        <include refid="columnPk"/>,
+        <include refid="columnsExcludePk"/>
+        from
+        <include refid="tableName"/>
+        order by cdate desc
+    </select>
+
+    <select id="queryByPage" resultMap="rightsProtectionResultMap">
+        select
+        <include refid="columnPk"/>,
+        <include refid="columnsExcludePk"/>
+        from
+        <include refid="tableName"/>
+        order by cdate desc
+    </select>
+</mapper>

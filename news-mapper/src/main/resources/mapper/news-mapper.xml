@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.kenneth.ctx.news.mapper.NewsMapper">
+
+    <sql id="columnPk">
+        nid
+    </sql>
+
+    <sql id="columnsExcludePk">
+        channeltype,
+        channelid,
+        channelname,
+        title,
+        author,
+        publishTime,
+        listImgPath,
+        carouselImgPath,
+        detailMultiImgPath,
+        content,
+        fileFormat,
+        isCarousel,
+        isTop,
+        status,
+        linkUrl,
+        isrecommand,
+        valid,
+        cdate,
+        udate
+    </sql>
+
+    <sql id="tableName">
+        t_news
+    </sql>
+
+    <insert id="insert" keyProperty="nid" useGeneratedKeys="true"
+            flushCache="true" timeout="20">
+        insert into
+        <include refid="tableName"/>
+        (
+        <include refid="columnsExcludePk"/>
+        )
+        values
+        (
+        #{channelType},
+        #{channelId},
+        #{channelName},
+        #{title},
+        #{author},
+        #{publishTime},
+        #{listImgPath},
+        #{carouselImgPath},
+        #{detailMultiImgPath},
+        #{content},
+        #{fileFormat},
+        #{isCarousel},
+        #{isTop},
+        #{status},
+        #{linkUrl},
+        #{isRecommand},
+        #{valid},
+        #{cdate},
+        #{udate}
+        )
+    </insert>
+
+    <update id="update">
+        update
+        <include refid="tableName"/>
+        <set>
+            <if test="channelType != null and channelType != ''">
+                channelType=#{channelType},
+            </if>
+            <if test="channelId != null">
+                channelId=#{channelId},
+            </if>
+            <if test="channelName != null and channelName != ''">
+                channelName=#{channelName},
+            </if>
+            <if test="title != null and title != ''">
+                title=#{title},
+            </if>
+            <if test="author != null and author != ''">
+                author=#{author},
+            </if>
+            <if test="publishTime != null and publishTime != ''">
+                publishTime=#{publishTime},
+            </if>
+            <if test="listImgPath != null and listImgPath != ''">
+                listImgPath=#{listImgPath},
+            </if>
+            <if test="carouselImgPath != null and carouselImgPath != ''">
+                carouselImgPath=#{carouselImgPath},
+            </if>
+            <if test="detailMultiImgPath != null and detailMultiImgPath != ''">
+                detailMultiImgPath=#{detailMultiImgPath},
+            </if>
+            <if test="content != null and content != ''">
+                content=#{content},
+            </if>
+            <if test="fileFormat != null">
+                fileFormat=#{fileFormat},
+            </if>
+            <if test="isCarousel != null">
+                isCarousel=#{isCarousel},
+            </if>
+            <if test="isTop != null">
+                isTop=#{isTop},
+            </if>
+            <if test="status != null">
+                status=#{status},
+            </if>
+            <if test="linkUrl != null and linkUrl != ''">
+                linkUrl=#{linkUrl},
+            </if>
+            <if test="isRecommand != null">
+                isRecommand=#{isRecommand},
+            </if>
+            <if test="valid != null">
+                valid=#{valid},
+            </if>
+            <if test="cdate != null and cdate != ''">
+                cdate=#{cdate},
+            </if>
+            <if test="udate != null and udate != ''">
+                udate=#{udate}
+            </if>
+        </set>
+        where
+        <include refid="columnPk"/>=#{nid}
+    </update>
+
+    <delete id="delete" parameterType="Integer" flushCache="true" timeout="20">
+        delete from
+        <include refid="tableName"/>
+        where
+        <include refid="columnPk"/>=#{id}
+    </delete>
+
+    <select id="getById" resultType="News">
+        select
+        <include refid="columnPk"/>,
+        <include refid="columnsExcludePk"/>
+        from
+        <include refid="tableName"/>
+        where
+        <include refid="columnPk"/>=#{id}
+    </select>
+
+    <select id="query" resultType="News">
+        select
+        <include refid="columnPk"/>,
+        <include refid="columnsExcludePk"/>,
+        (select count(1) from t_comment c where c.nid=n.nid) as commentCount
+        from
+        <include refid="tableName"/>
+        n
+        <where>
+            <if test="vo.valid != null">
+                and valid=#{vo.valid},
+            </if>
+            <if test="vo.status != null">
+                and status = #{vo.status }
+            </if>
+            <if test="vo.newsId != null">
+                AND nid=#{vo.newsId}
+            </if>
+            <if test="vo.channelId != null and vo.channelType != null">
+                AND channelid=#{vo.channelId}
+                AND channeltype=#{vo.channelType}
+            </if>
+            <if test="vo.isCarousel != null">
+                AND iscarousel=#{vo.isCarousel}
+            </if>
+            <if test="vo.isRecommand != null">
+                AND isrecommand=#{vo.isRecommand}
+            </if>
+            <if test="vo.title != null and vo.title != ''">
+                and title like "%"#{title}"%"
+            </if>
+        </where>
+        order by
+        publishtime desc
+    </select>
+
+    <select id="queryByPage" resultType="News">
+        select
+        <include refid="columnPk"/>,
+        <include refid="columnsExcludePk"/>,
+        (select count(1) from t_comment c where c.nid=n.nid) as commentCount
+        <if test="vo.userId != null">
+            ,
+            (case when (select uf.nid from t_user_favorite uf where uf.uid=#{vo.userId } and uf.nid=n.nid) is null then
+            0 else 1 end) isfavorate
+        </if>
+        from
+        <include refid="tableName"/>
+        n
+        <where>
+            <if test="vo.valid != null">
+                and valid=#{vo.valid}
+            </if>
+            <if test="vo.status != null">
+                and status = #{vo.status }
+            </if>
+            <if test="vo.newsId != null">
+                AND nid=#{vo.newsId}
+            </if>
+            <if test="vo.channelId != null">
+                AND channelid=#{vo.channelId}
+            </if>
+            <if test="vo.channelType != null">
+                AND channeltype=#{vo.channelType}
+            </if>
+            <if test="vo.isCarousel != null">
+                AND iscarousel=#{vo.isCarousel}
+            </if>
+            <if test="vo.isRecommand != null">
+                AND isrecommand=#{vo.isRecommand}
+            </if>
+            <if test="vo.dateStart != null and vo.dateStart != ''">
+                AND publishtime &gt;= #{vo.dateStart}
+            </if>
+            <if test="vo.dateEnd != null and vo.dateEnd != ''">
+                AND publishtime &lt;= #{vo.dateEnd}
+            </if>
+            <if test="vo.title != null and vo.title != ''">
+                AND title like CONCAT('%',#{vo.title},'%')
+            </if>
+            <if test="vo.author != null and vo.author != ''">
+                AND author like CONCAT('%',#{vo.author},'%')
+            </if>
+            <if test="vo.newsIdList != null and vo.newsIdList.size != 0">
+                and nid in
+                <foreach item="item" index="index" collection="vo.newsIdList" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        order by
+        publishtime desc
+    </select>
+
+    <select id="queryUserFavoriteByPage" resultType="News">
+        select
+        <include refid="columnPk"/>,
+        <include refid="columnsExcludePk"/>,
+        (select count(1) from t_comment c where c.nid=n.nid) as commentCount
+        <if test="vo.userId != null">
+            ,
+            (case when (select uf.nid from t_user_favorite uf where uf.uid=#{vo.userId } and uf.nid=n.nid) is null then
+            0 else 1 end) isfavorate
+        </if>
+        from
+        <include refid="tableName"/>
+        n
+        where nid in
+        (
+        select nid from t_user_favorite where uid=#{vo.userId } order by cdate desc
+        )
+    </select>
+</mapper>

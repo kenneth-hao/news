@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.kenneth.ctx.news.mapper.CategoryMapper">
+
+    <sql id="columnPk">
+        cid
+    </sql>
+
+    <sql id="columnsExcludePk">
+        alias,
+        name,
+        isfixed,
+        isDefault,
+        seqno
+    </sql>
+
+    <sql id="tableName">
+        t_category
+    </sql>
+
+    <insert id="insert" keyProperty="cid" useGeneratedKeys="true"
+            flushCache="true" timeout="20">
+        insert into
+        <include refid="tableName"/>
+        (
+        <include refid="columnsExcludePk"/>
+        )
+        values
+        (
+        #{alias},
+        #{name},
+        #{isfixed},
+        #{isDefault},
+        #{seqno}
+        )
+    </insert>
+
+    <update id="update">
+        update
+        <include refid="tableName"/>
+        <set>
+            <if test="alias != null and alias != ''">
+                alias = #{alias },
+            </if>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="seqno != null">
+                seqno = #{seqno},
+            </if>
+            <if test="isfixed != null">
+                isfixed = #{isfixed}
+            </if>
+            <if test="isDefault != null">
+                isDefault = #{isDefault}
+            </if>
+        </set>
+        where
+        <include refid="columnPk"/>
+        = #{cid}
+    </update>
+
+    <delete id="delete" flushCache="true" timeout="20">
+        delete from
+        <include refid="tableName"/>
+        where
+        <include refid="columnPk"/>=#{id}
+    </delete>
+
+    <select id="getById" resultType="Category">
+        select
+        <include refid="columnPk"/>,
+        <include refid="columnsExcludePk"/>
+        from
+        <include refid="tableName"/>
+        where
+        <include refid="columnPk"/>=#{id}
+    </select>
+
+    <select id="query" resultType="Category">
+        select
+        <include refid="columnPk"/>,
+        <include refid="columnsExcludePk"/>
+        from
+        <include refid="tableName"/>
+        order by seqno
+    </select>
+
+    <select id="queryByPage" resultType="Category">
+        select
+        <include refid="columnPk"/>,
+        <include refid="columnsExcludePk"/>
+        from
+        <include refid="tableName"/>
+        order by seqno
+    </select>
+</mapper>

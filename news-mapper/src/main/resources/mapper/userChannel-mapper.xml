@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.kenneth.ctx.news.mapper.UserChannelMapper">
+
+    <sql id="columnPk">
+        ucid
+    </sql>
+
+    <sql id="columnsExcludePk">
+        uid,
+        uname,
+        channeltype,
+        channelid,
+        channelalias,
+        channelname,
+        seqno,
+        cdate
+    </sql>
+
+    <sql id="tableName">
+        t_user_channel
+    </sql>
+
+
+    <resultMap id="userChannelResultMap" type="UserChannel">
+        <id property="ucid" column="ucid" javaType="Integer"/>
+        <result property="uid" column="uid" javaType="Integer"/>
+        <result property="uname" column="uname" javaType="String"/>
+        <result property="channelType" column="channeltype" javaType="Integer"/>
+        <result property="channelId" column="channelid" javaType="Integer"/>
+        <result property="channelAlias" column="channelalias" javaType="String"/>
+        <result property="channelName" column="channelname" javaType="String"/>
+        <result property="seqno" column="seqno" javaType="Integer"/>
+        <result property="isfixed" column="isfixed" javaType="Integer"/>
+    </resultMap>
+
+    <select id="queryByPage" resultType="UserChannel">
+        select
+        <include refid="columnPk"/>,
+        <include refid="columnsExcludePk"/>
+        from
+        <include refid="tableName"/>
+        order by cdate desc
+    </select>
+
+    <insert id="insert" parameterType="UserChannel" keyProperty="ucid" useGeneratedKeys="true"
+            flushCache="true" timeout="20">
+        insert into
+        <include refid="tableName"/>
+        (
+        <include refid="columnsExcludePk"/>
+        )
+        values
+        (
+        #{uid},
+        #{uname},
+        #{channelType},
+        #{channelId},
+        #{channelAlias},
+        #{channelName},
+        #{seqno},
+        #{cdate}
+        )
+    </insert>
+
+    <delete id="delete" parameterType="Integer" flushCache="true" timeout="20">
+        delete from
+        <include refid="tableName"/>
+        where
+        <include refid="columnPk"/>=#{id}
+    </delete>
+
+    <delete id="deleteCustomed" parameterType="Integer" flushCache="true" timeout="20">
+        delete from
+        <include refid="tableName"/>
+        where
+        uid=#{uid}
+    </delete>
+
+    <select id="findById" parameterType="Integer" resultMap="userChannelResultMap">
+        select
+        <include refid="columnPk"/>,
+        <include refid="columnsExcludePk"/>
+        from
+        <include refid="tableName"/>
+        where
+        <include refid="columnPk"/>=#{id}
+    </select>
+
+    <select id="queryCustom" resultMap="userChannelResultMap">
+        select -1 as ucid, cid as channelid, 1 as channeltype, name as channelname, seqno, isfixed
+        from t_category
+        where isfixed = 1
+        union
+        select ucid, channelid, channeltype, channelname, seqno, 0 as isfixed
+        from t_user_channel
+        where uid=#{uid}
+        order by seqno
+    </select>
+
+    <select id="queryUncustomCategory" resultMap="userChannelResultMap">
+        select -1 as ucid, cid as channelid, 1 as channeltype, name as channelname, seqno, isfixed
+        from t_category
+        where
+        isfixed != 1
+        and
+        cid not in (
+        select channelid from t_user_channel where channeltype=1 and uid=#{uid}
+        )
+        order by seqno
+    </select>
+
+    <select id="queryUncustomCarEnterprise" resultMap="userChannelResultMap">
+        select -1 as ucid, ceid as channelid, 2 as channeltype, name as channelname, seqno, 0 as isfixed
+        from t_car_enterprise
+        where
+        ceid not in (
+        select channelid from t_user_channel where channeltype=2 and uid=#{uid}
+        )
+    </select>
+
+</mapper>

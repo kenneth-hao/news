@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.kenneth.ctx.news.mapper.CarEnterpriseMapper">
+
+    <sql id="idKey">
+        ceid
+    </sql>
+
+    <sql id="withoutId">
+        name,
+        brandimgpath,
+        appurl,
+        seqno,
+        isDefault,
+        valid,
+        cdate,
+        udate
+    </sql>
+
+    <sql id="tblName">
+        t_car_enterprise
+    </sql>
+
+    <insert id="insert" keyProperty="ceid" useGeneratedKeys="true"
+            flushCache="true" timeout="20">
+        insert into
+        <include refid="tblName"/>
+        (
+        <include refid="withoutId"/>
+        )
+        values
+        (
+        #{name},
+        #{brandImgPath},
+        #{appurl},
+        #{seqno},
+        #{isDefault},
+        #{valid},
+        #{cdate},
+        #{udate}
+        )
+    </insert>
+
+    <update id="update">
+        update
+        <include refid="tblName"/>
+        <set>
+            <if test="name != null and name != ''">
+                name=#{name},
+            </if>
+            <if test="brandImgPath != null and brandImgPath != ''">
+                brandImgPath=#{brandImgPath},
+            </if>
+            <if test="appurl != null and appurl != ''">
+                appurl=#{appurl},
+            </if>
+            <if test="seqno != null and seqno != ''">
+                seqno=#{seqno},
+            </if>
+            <if test="isDefault != null">
+                seqno=#{isDefault},
+            </if>
+            <if test="valid != null">
+                valid=#{valid},
+            </if>
+            <if test="cdate != null and cdate != ''">
+                cdate=#{cdate},
+            </if>
+            <if test="udate != null and udate != ''">
+                udate=#{udate}
+            </if>
+        </set>
+        where
+        <include refid="idKey"/>
+        = #{ceid}
+    </update>
+
+    <delete id="delete" flushCache="true" timeout="20">
+        delete from
+        <include refid="tblName"/>
+        where
+        <include refid="idKey"/>=#{id}
+    </delete>
+
+    <select id="getById" resultType="CarEnterprise">
+        select
+        <include refid="idKey"/>,
+        <include refid="withoutId"/>
+        from
+        <include refid="tblName"/>
+        where
+        <include refid="idKey"/>=#{id}
+    </select>
+
+    <select id="query" resultType="CarEnterprise">
+        select
+        <include refid="idKey"/>,
+        <include refid="withoutId"/>
+        from
+        <include refid="tblName"/>
+        where
+        valid = 1
+        order by
+        seqno
+    </select>
+
+    <select id="queryByPage" resultType="CarEnterprise">
+        select
+        <include refid="idKey"/>,
+        <include refid="withoutId"/>
+        from
+        <include refid="tblName"/>
+        where
+        valid = 1
+        order by
+        seqno
+    </select>
+</mapper>
