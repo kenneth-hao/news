@@ -40,24 +40,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.kenneth.upload.plugin</groupId>
-            <artifactId>ckfinder</artifactId>
-            <version>2.4</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.kenneth.upload.plugin</groupId>
-            <artifactId>ckfinder-fileeditor</artifactId>
-            <version>2.4</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.kenneth.upload.plugin</groupId>
-            <artifactId>ckfinder-imageresize</artifactId>
-            <version>2.4</version>
-        </dependency>
-
-        <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
             <version>2.5</version>
