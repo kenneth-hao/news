@@ -318,12 +318,12 @@
         <repository>
             <id>nexus-releases</id>
             <name>Nexus Repository</name>
-            <url>http://192.168.1.223:8081/nexus/content/repositories/releases/</url>
+            <url>http://182.92.236.19:8081/nexus/content/repositories/releases/</url>
         </repository>
         <snapshotRepository>
             <id>nexus-snapshots</id>
             <name>Nexus Repository</name>
-            <url>http://192.168.1.223:8081/nexus/content/repositories/snapshots</url>
+            <url>http://182.92.236.19:8081/nexus/content/repositories/snapshots</url>
         </snapshotRepository>
     </distributionManagement>
 
